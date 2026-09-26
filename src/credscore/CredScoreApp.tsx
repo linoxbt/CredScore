@@ -35,11 +35,11 @@ function Avatar({ agent, size = "md" }: { agent: Agent; size?: string }) { retur
 export default function CredScoreApp({ page }: { page: Page }) {
   const { address: walletAddress, isConnected, connectInjected, connectGenerated, isConnecting, client, account, balance } = useWallet();
   const location = useLocation(); const navigate = useNavigate(); const params = useParams();
-  const [agents, setAgents] = useState(demoAgents); const [ratings, setRatings] = useState(demoRatings);
+  const [agents, setAgents] = useState<Agent[]>([]); const [ratings, setRatings] = useState<Rating[]>([]);
   const [query, setQuery] = useState(""); const [category, setCategory] = useState("All agents"); const [searchOpen, setSearchOpen] = useState(false);
   const [modal, setModal] = useState<"register" | "rate" | "dispute" | "stake" | null>(null); const [notice, setNotice] = useState(""); const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({ name: "", profile: "", target: "", stars: 5, task: "", evidence: "", amount: "" });
-  const contractAddress = import.meta.env.VITE_CREDSCORE_ADDRESS as `0x${string}` | undefined;
+  const contractAddress = (import.meta.env.VITE_CREDSCORE_ADDRESS || "0xFD073b95B530265d6E570Dc25a16e6165a0e5836") as `0x${string}`;
   const connectedAgent = useMemo(() => agents.find(a => a.address.toLowerCase() === walletAddress.toLowerCase()), [agents, walletAddress]);
   const activeAgent = agents.find(a => a.address.toLowerCase() === params.address?.toLowerCase()) ?? agents[0];
   const filtered = agents.filter(a => (category === "All agents" || a.category === category) && `${a.name} ${a.category}`.toLowerCase().includes(query.toLowerCase()));
@@ -128,7 +128,7 @@ export default function CredScoreApp({ page }: { page: Page }) {
         <div className="top-actions"><button className="icon-btn search-button" onClick={() => setSearchOpen(v => !v)}><Search size={17}/><span>Search</span><kbd>⌘ K</kbd></button><button className="icon-btn" title="Activity"><Activity size={17}/></button><button className="connect-top" onClick={connect} disabled={isConnecting}>{isConnected ? <><i className="connected-dot"/>{short(walletAddress)}</> : <><Wallet size={15}/>{isConnecting ? "Connecting" : "Connect wallet"}</>}</button></div>
       </header>
       <div className="cs-content">
-        <div className="data-banner"><span className="data-banner-dot"/><span>{contractAddress ? "Live contract connected. Network totals and historical trends are illustrative until an indexer is configured." : "Demo preview · sample agents, ratings, and network metrics. Configure a contract address to load on-chain profiles."}</span></div>
+        <div className="data-banner"><span className="data-banner-dot"/><span>{contractAddress ? "Live CredScore contract · Studio Dev" : "Live CredScore contract · Studio Dev"}</span></div>
         {page === "dashboard" && <Dashboard agents={agents} ratings={ratings} onOpen={openModal} navigate={navigate}/>}
         {page === "agents" && <AgentDirectory agents={filtered} query={query} setQuery={setQuery} category={category} setCategory={setCategory} onOpen={() => openModal("register")}/>}
         {page === "agent" && <AgentProfile agent={activeAgent} ratings={ratings.filter(r => r.agentAddress === activeAgent.address)} onRate={() => openModal("rate", activeAgent.address)} onStake={() => openModal("stake")} canStake={isConnected && walletAddress.toLowerCase() === activeAgent.address.toLowerCase()}/>}

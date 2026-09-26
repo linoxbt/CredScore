@@ -74,7 +74,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [connectionMode, setConnectionMode] = useState<ConnectionMode>("none");
   const [isConnecting, setIsConnecting] = useState(false);
-  const [client, setClient] = useState<ReturnType<typeof createClient> | null>(null);
+  const [client, setClient] = useState<ReturnType<typeof createClient> | null>(() => createClient({ chain: studioDevnet }));
   const [account, setAccount] = useState<ReturnType<typeof createAccount> | null>(null);
   const [privateKey, setPrivateKey] = useState<string | null>(null);
 
