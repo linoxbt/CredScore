@@ -42,7 +42,7 @@ export default function CredScoreApp({ page }: { page: Page }) {
   const [form, setForm] = useState({ name: "", profile: "", target: "", stars: 5, task: "", evidence: "", amount: "" });
   const contractAddress = (import.meta.env.VITE_CREDSCORE_ADDRESS || "0xFD073b95B530265d6E570Dc25a16e6165a0e5836") as `0x${string}`;
   const connectedAgent = useMemo(() => agents.find(a => a.address.toLowerCase() === walletAddress.toLowerCase()), [agents, walletAddress]);
-  const activeAgent = agents.find(a => a.address.toLowerCase() === params.address?.toLowerCase()) ?? agents[0];
+  const activeAgent = agents.find(a => a.address.toLowerCase() === params.address?.toLowerCase()) ?? agents[0] ?? demoAgents[0];
   const filtered = agents.filter(a => (category === "All agents" || a.category === category) && `${a.name} ${a.category}`.toLowerCase().includes(query.toLowerCase()));
   const showNotice = (s: string) => { setNotice(s); window.setTimeout(() => setNotice(""), 5000); };
 
