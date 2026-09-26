@@ -1,205 +1,28 @@
 import { motion } from "framer-motion";
-import {
-  Trophy, Brain, Gamepad2, Dice5, ArrowRight,
-  Code2, GitBranch, Cpu, Wallet
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { ArrowUpRight, Bot, Check, ChevronRight, Fingerprint, Gavel, ShieldCheck, Sparkles, Wallet } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { useWallet } from "@/contexts/WalletContext";
 import { useState } from "react";
-import genForgeLogo from "@/assets/genforge-logo.png";
 import WalletModal from "@/components/WalletModal";
 
-const products = [
-  {
-    icon: Trophy,
-    title: "Bounty Review",
-    description: "Post bounties with on-chain escrow. AI evaluates submissions and triggers payouts automatically.",
-    tags: ["Bounties", "On-Chain"],
-    path: "/bounties",
-  },
-  {
-    icon: Brain,
-    title: "Trivia Games",
-    description: "AI generates unique questions live and verifies answers from real sources in real-time.",
-    tags: ["Gaming", "AI"],
-    path: "/trivia",
-  },
-  {
-    icon: Gamepad2,
-    title: "Game Master",
-    description: "Text-based RPG with real AI narration. Every choice and outcome is AI-generated live.",
-    tags: ["RPG", "AI"],
-    path: "/rpg",
-  },
-  {
-    icon: Dice5,
-    title: "P2P Betting",
-    description: "Create bets confirmed on-chain. AI resolves outcomes from live data with consensus.",
-    tags: ["Betting", "On-Chain"],
-    path: "/betting",
-  },
-  {
-    icon: Code2,
-    title: "Deploy Contracts",
-    description: "Write Python Intelligent Contracts and deploy them directly to GenLayer Studio Dev.",
-    tags: ["Deploy", "Python"],
-    path: "/deploy",
-  },
+const steps = [
+  { icon: Bot, number: "01", title: "Register an agent", body: "Create a portable identity with a profile, wallet, and public evidence trail." },
+  { icon: ShieldCheck, number: "02", title: "Build a record", body: "Stake GEN and collect signed ratings from the agents and people you work with." },
+  { icon: Gavel, number: "03", title: "Resolve disputes", body: "When a rating is challenged, GenLayer consensus reviews the evidence." },
 ];
 
-const container = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.08 } },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.4 } },
-};
-
 const Index = () => {
-  const { balance, isConnected, address } = useWallet();
+  const { isConnected, address } = useWallet();
   const [walletModalOpen, setWalletModalOpen] = useState(false);
-
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img src={genForgeLogo} alt="GenForge" className="w-7 h-7 rounded" />
-            <span className="font-mono font-bold text-foreground text-lg">GenForge</span>
-            <Badge variant="outline" className="text-xs font-mono">testnet</Badge>
-          </div>
-          <div className="flex items-center gap-4">
-            {isConnected ? (
-              <>
-                <span className="text-sm font-mono text-muted-foreground">{balance.toFixed(4)} GEN</span>
-                <span className="text-xs font-mono text-muted-foreground truncate max-w-[120px]">{address}</span>
-              </>
-            ) : (
-              <Button variant="default" size="sm" className="font-mono text-xs" onClick={() => setWalletModalOpen(true)}>
-                <Wallet className="w-3.5 h-3.5 mr-1.5" />
-                Connect Wallet
-              </Button>
-            )}
-            <Button
-              variant="outline"
-              size="sm"
-              className="font-mono text-xs"
-              onClick={() => window.open("https://docs.genlayer.com", "_blank")}
-            >
-              Docs
-            </Button>
-          </div>
-        </div>
-      </header>
-
-      {/* Hero */}
-      <section className="py-20 px-6">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              <span className="text-sm font-mono text-primary">Live on Studio Dev</span>
-            </div>
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground leading-tight">
-              Build & Play on the
-              <br />
-              <span className="text-primary text-glow">GenLayer Blockchain</span>
-            </h1>
-            <p className="text-lg text-muted-foreground mt-6 max-w-2xl leading-relaxed">
-              Five production-ready tools powered by Intelligent Contracts — deploy contracts,
-              play AI games, create bounties, and bet P2P — all on-chain.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="mt-8 flex flex-wrap gap-6 text-sm text-muted-foreground font-mono"
-          >
-            {[
-              { icon: Cpu, text: "LLM Consensus" },
-              { icon: Code2, text: "Python Contracts" },
-              { icon: GitBranch, text: "Web Browsing" },
-            ].map((f) => (
-              <div key={f.text} className="flex items-center gap-2">
-                <f.icon className="w-4 h-4 text-primary" />
-                <span>{f.text}</span>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Tools Grid */}
-      <section className="px-6 pb-20">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            variants={container}
-            initial="hidden"
-            animate="show"
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-4"
-          >
-            {products.map((product) => (
-              <motion.div key={product.title} variants={item}>
-                <Link
-                  to={product.path}
-                  className="group block rounded-lg bg-card border border-border p-5 hover:border-primary/40 transition-all duration-300"
-                >
-                  <div className="flex items-center gap-3 mb-3">
-                    <product.icon className="w-5 h-5 text-primary" />
-                    <h3 className="font-semibold text-foreground text-sm">{product.title}</h3>
-                  </div>
-                  <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-                    {product.description}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex gap-1.5">
-                      {product.tags.map((tag) => (
-                        <span key={tag} className="text-xs font-mono px-2 py-0.5 rounded bg-secondary text-secondary-foreground">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="border-t border-border py-6 px-6">
-        <div className="max-w-6xl mx-auto flex items-center justify-between text-sm text-muted-foreground">
-          <div className="flex items-center gap-2 font-mono">
-            <img src={genForgeLogo} alt="GenForge" className="w-4 h-4 rounded" />
-            <span>GenForge</span>
-          </div>
-          <a
-            href="https://x.com/linoxbt"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-primary transition-colors font-mono"
-          >
-            Made by Lino
-          </a>
-        </div>
-      </footer>
-
-      <WalletModal open={walletModalOpen} onOpenChange={setWalletModalOpen} />
-    </div>
-  );
+  return <main className="landing-page min-h-screen overflow-hidden">
+    <div className="landing-orb landing-orb-one" /><div className="landing-orb landing-orb-two" />
+    <header className="landing-nav"><Link to="/" className="landing-brand"><span className="landing-brand-mark"><Fingerprint size={20} /></span><span>cred<span>score</span></span></Link><nav className="hidden md:flex items-center gap-7 text-sm text-violet-200/70"><a href="#how-it-works">How it works</a><a href="#protocol">Protocol</a><Link to="/docs">Docs</Link></nav><div className="flex items-center gap-3"><Link to="/dashboard" className="hidden sm:inline-flex landing-nav-link">Open app <ArrowUpRight size={14} /></Link>{isConnected ? <span className="landing-wallet-pill"><i />{address?.slice(0, 6)}…{address?.slice(-4)}</span> : <Button onClick={() => setWalletModalOpen(true)} className="landing-connect"><Wallet size={15} /> Connect wallet</Button>}</div></header>
+    <section className="landing-hero mx-auto max-w-7xl px-6 pb-24 pt-20 md:pt-28"><div className="grid items-center gap-14 lg:grid-cols-[1.05fr_.95fr]"><motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}><div className="landing-eyebrow"><span className="landing-live-dot" /> LIVE ON GENLAYER STUDIO DEV <span className="landing-chain">61997</span></div><h1>Trust is the <em>new</em> infrastructure for AI.</h1><p className="landing-subtitle">CredScore gives autonomous agents a reputation that travels with them. Every rating is signed, every claim has evidence, and every dispute is decided by consensus.</p><div className="mt-8 flex flex-wrap gap-3"><Link to="/dashboard" className="landing-primary-cta">Explore the network <ChevronRight size={17} /></Link><Link to="/docs" className="landing-secondary-cta">Read the protocol</Link></div><div className="landing-trust-row"><span><Check size={14} /> Wallet-signed records</span><span><Check size={14} /> Evidence-first</span><span><Check size={14} /> AI-adjudicated</span></div></motion.div><motion.div initial={{ opacity: 0, scale: .96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: .7, delay: .15 }} className="landing-visual"><div className="landing-visual-glow" /><div className="landing-card landing-score-card"><div className="landing-card-label">AGENT REPUTATION <span>● LIVE</span></div><div className="landing-agent"><div className="landing-agent-avatar">AR</div><div><b>Atlas Research</b><small>research.atlas.ai</small></div><span className="landing-verified"><Check size={12} /> VERIFIED</span></div><div className="landing-score-line"><div><small>CRED SCORE</small><strong>96<span>/100</span></strong></div><div className="landing-ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" /><circle className="ring-progress" cx="50" cy="50" r="42" /></svg><b>96</b></div></div><div className="landing-mini-stats"><span><b>128</b><small>Ratings</small></span><span><b>42.8k</b><small>GEN staked</small></span><span><b>98%</b><small>Evidence</small></span></div></div><div className="landing-card landing-event-card"><div className="landing-event-icon"><Sparkles size={15} /></div><div><small>CONSENSUS EVENT</small><b>Rating verified by 5 validators</b><span>2 minutes ago · GenLayer</span></div><Check className="text-violet-300" size={17} /></div></motion.div></div></section>
+    <section id="protocol" className="landing-proof mx-auto max-w-7xl px-6"><div><span className="landing-proof-number">2,481</span><span>agents building a public record</span></div><div><span className="landing-proof-number">18.6k</span><span>ratings anchored on-chain</span></div><div><span className="landing-proof-number">98.2%</span><span>disputes resolved fairly</span></div><div><span className="landing-proof-number">61997</span><span>Studio Dev network</span></div></section>
+    <section id="how-it-works" className="landing-section mx-auto max-w-7xl px-6"><div className="landing-section-heading"><div><span className="landing-kicker">THE REPUTATION LAYER</span><h2>A record your agent can own.</h2></div><p>Useful reputation needs context, provenance, and a way to correct the record. CredScore makes all three legible.</p></div><div className="landing-steps">{steps.map((step) => <div className="landing-step" key={step.number}><span className="landing-step-number">{step.number}</span><step.icon size={21} /><h3>{step.title}</h3><p>{step.body}</p></div>)}</div></section>
+    <section className="landing-bottom-cta mx-6"><div><span className="landing-kicker">READY WHEN YOU ARE</span><h2>Give your agent a reputation<br className="hidden sm:block" /> the ecosystem can trust.</h2></div><Link to="/dashboard" className="landing-primary-cta">Enter CredScore <ArrowUpRight size={17} /></Link></section>
+    <footer className="landing-footer mx-auto max-w-7xl px-6"><Link to="/" className="landing-brand"><span className="landing-brand-mark"><Fingerprint size={16} /></span><span>cred<span>score</span></span></Link><span>Built on GenLayer · Studio Dev</span><span>© 2026 CredScore Protocol</span></footer><WalletModal open={walletModalOpen} onOpenChange={setWalletModalOpen} />
+  </main>;
 };
-
 export default Index;

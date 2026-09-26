@@ -1,10 +1,11 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { WalletProvider } from "@/contexts/WalletContext";
 import CredScoreApp from "@/credscore/CredScoreApp";
+import Index from "@/pages/Index";
 
 export default function App() {
   return <WalletProvider><BrowserRouter><Routes>
-    <Route path="/" element={<Navigate to="/dashboard" replace />} />
+    <Route path="/" element={<Index />} />
     <Route path="/dashboard" element={<CredScoreApp page="dashboard" />} />
     <Route path="/agents" element={<CredScoreApp page="agents" />} />
     <Route path="/agents/:address" element={<CredScoreApp page="agent" />} />
