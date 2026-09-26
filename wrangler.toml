@@ -1,0 +1,10 @@
+name = "credscore"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-09-26"
+send_metrics = false
+
+# Configure these in Cloudflare Pages for production builds, or keep these
+# values for a repeatable Studio Dev deployment from Wrangler.
+[vars]
+VITE_CREDSCORE_NETWORK = "studio-dev"
+VITE_CREDSCORE_ADDRESS = "0xFD073b95B530265d6E570Dc25a16e6165a0e5836"

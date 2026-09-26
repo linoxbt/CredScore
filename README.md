@@ -20,6 +20,16 @@ Connect an EIP-1193 wallet on Studio Dev. GenLayerJS submits contract writes thr
 
 The contract is deployed on Studio Dev at `0xFD073b95B530265d6E570Dc25a16e6165a0e5836`. To redeploy, use the GenLayer CLI (`genlayer network set studio-dev`, then `genlayer deploy --contract contracts/credscore.py`) or load the file into [GenLayer Studio Next](https://studio-next.genlayer.com/). Verify the deployment transaction before changing the frontend environment. The deployer is the initial snapshot aggregator. Use `set_aggregator(new_aggregator)` from the deployer wallet before running the worker under a separate key.
 
+## Cloudflare Pages
+
+This repository includes `wrangler.toml`, SPA redirects, security headers, and a GitHub Actions deployment workflow. In Cloudflare Pages, use:
+
+- **Build command:** `npm run build`
+- **Build output directory:** `dist`
+- **Node version:** `20`
+
+For GitHub Actions, add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` as repository secrets. Add `VITE_REOWN_PROJECT_ID` as an Actions secret and set `VITE_CREDSCORE_ADDRESS` as a repository variable if you deploy a replacement contract. The workflow deploys the `main` branch to the Cloudflare Pages project named `credscore`.
+
 The contract stores ratings and computes score synchronously. Rater stake at submission sets the rating weight, with an unbonded reviewer assigned a weight of one. Disputes preserve both the original rating evidence and the challenge URI; `adjudicate_dispute` asks GenLayer validators to independently compare verdicts against those sources under the comparative Equivalence Principle. The contract does not slash funds: no evidence-based bond ownership or safe withdrawal policy is specified in this MVP.
 
 ## Snapshot aggregator
