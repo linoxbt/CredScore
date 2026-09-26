@@ -28,6 +28,8 @@ This repository includes `wrangler.toml`, SPA redirects, security headers, and a
 - **Build output directory:** `dist`
 - **Node version:** `20`
 
+Leave Cloudflare Pages' **Deploy command** empty. Pages automatically publishes the `dist` directory after the build. If your setup requires a deploy command, use `npm run deploy` or `npm run deploy:pages`; do not use `npx wrangler deploy`, which targets Workers and causes the “Missing entry-point to Worker script” error.
+
 For GitHub Actions, add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` as repository secrets. Add `VITE_REOWN_PROJECT_ID` as an Actions secret and set `VITE_CREDSCORE_ADDRESS` as a repository variable if you deploy a replacement contract. The workflow deploys the `main` branch to the Cloudflare Pages project named `credscore`.
 
 The contract stores ratings and computes score synchronously. Rater stake at submission sets the rating weight, with an unbonded reviewer assigned a weight of one. Disputes preserve both the original rating evidence and the challenge URI; `adjudicate_dispute` asks GenLayer validators to independently compare verdicts against those sources under the comparative Equivalence Principle. The contract does not slash funds: no evidence-based bond ownership or safe withdrawal policy is specified in this MVP.
