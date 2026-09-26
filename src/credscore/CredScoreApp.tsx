@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Activity, ArrowDownRight, ArrowRight, ArrowUpRight, BadgeCheck, Bot, BookOpen, ChartNoAxesCombined, ChevronDown, CircleHelp, Clock3, Copy, ExternalLink, Fingerprint, Gavel, Github, Globe2, LayoutDashboard, LoaderCircle, Menu, Plus, Search, Shield, ShieldAlert, ShieldCheck, Sparkles, Star, Wallet, X } from "lucide-react";
 import { useWallet } from "@/contexts/WalletContext";
+import WalletModal from "@/components/WalletModal";
 import "./credscore.css";
 
 type Page = "dashboard" | "agents" | "agent" | "ratings" | "disputes" | "docs" | "settings";
@@ -24,7 +25,7 @@ const demoRatings: Rating[] = [
   { id: "#RS-2937", agent: "Atlas Research", agentAddress: demoAgents[0].address, reviewer: "0x9d1...037e", value: 5, task: "Source validation", date: "5 hrs ago", status: "Verified", evidence: "bafybeifq...56kc" },
   { id: "#RS-2936", agent: "Northstar QA", agentAddress: demoAgents[4].address, reviewer: "0xc4a...a9e2", value: 4, task: "Pre-release code audit", date: "Yesterday", status: "Verified", evidence: "bafybeib2...jh91" },
 ];
-const nav = [{ to: "/dashboard", label: "Overview", icon: LayoutDashboard }, { to: "/agents", label: "Agent directory", icon: Bot }, { to: "/ratings", label: "Ratings", icon: Star }, { to: "/disputes", label: "Dispute center", icon: Gavel }];
+const nav = [{ to: "/dashboard", label: "Overview", icon: LayoutDashboard }, { to: "/agents", label: "Agent directory", icon: Bot }, { to: "/ratings", label: "Ratings", icon: Star }, { to: "/disputes", label: "Dispute center", icon: Gavel }, { to: "/docs", label: "Documentation", icon: BookOpen }, { to: "/settings", label: "Settings", icon: Shield }];
 const short = (s: string) => s.length > 18 ? `${s.slice(0, 8)}...${s.slice(-5)}` : s;
 
 function ScoreRing({ score, size = 52 }: { score: number; size?: number }) {
@@ -36,7 +37,7 @@ export default function CredScoreApp({ page }: { page: Page }) {
   const { address: walletAddress, isConnected, connectInjected, connectGenerated, isConnecting, client, account, balance } = useWallet();
   const location = useLocation(); const navigate = useNavigate(); const params = useParams();
   const [agents, setAgents] = useState<Agent[]>([]); const [ratings, setRatings] = useState<Rating[]>([]);
-  const [query, setQuery] = useState(""); const [category, setCategory] = useState("All agents"); const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState(""); const [category, setCategory] = useState("All agents"); const [searchOpen, setSearchOpen] = useState(false); const [sidebarOpen, setSidebarOpen] = useState(false); const [walletModalOpen, setWalletModalOpen] = useState(false);
   const [modal, setModal] = useState<"register" | "rate" | "dispute" | "stake" | null>(null); const [notice, setNotice] = useState(""); const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({ name: "", profile: "", target: "", stars: 5, task: "", evidence: "", amount: "" });
   const contractAddress = (import.meta.env.VITE_CREDSCORE_ADDRESS || "0xFD073b95B530265d6E570Dc25a16e6165a0e5836") as `0x${string}`;
@@ -109,22 +110,22 @@ export default function CredScoreApp({ page }: { page: Page }) {
     }
   };
 
-  const connect = async () => { try { await connectInjected(); } catch { showNotice("Could not connect. Install or unlock an EIP-1193 wallet, then try again."); } };
+  const connect = async () => { setWalletModalOpen(true); };
 
   return <div className="cs-app">
-    <aside className="cs-sidebar">
+    {sidebarOpen && <button className="sidebar-scrim" aria-label="Close navigation" onClick={() => setSidebarOpen(false)}/>}<aside className={`cs-sidebar${sidebarOpen ? " is-open" : ""}`}>
       <Link to="/dashboard" className="cs-brand"><img className="brand-logo-mark" src="/credscore-mark.svg" alt="CredScore" /><span>cred<span>score</span><small>GENLAYER NETWORK</small></span></Link>
       <div className="side-label">WORKSPACE</div>
-      <nav>{nav.map(item => <Link key={item.to} to={item.to} className={location.pathname === item.to || (item.to === "/agents" && page === "agent") ? "active" : ""}><item.icon size={17}/>{item.label}{item.to === "/disputes" && <b className="nav-count">2</b>}</Link>)}</nav>
+      <nav>{nav.map(item => <Link key={item.to} to={item.to} onClick={() => setSidebarOpen(false)} className={location.pathname === item.to || (item.to === "/agents" && page === "agent") ? "active" : ""}><item.icon size={17}/>{item.label}{item.to === "/disputes" && <b className="nav-count">2</b>}</Link>)}</nav>
       <div className="side-label ecosystem-label">ECOSYSTEM</div>
       <nav><a href="https://docs.genlayer.com" target="_blank" rel="noreferrer"><BookOpen size={17}/>GenLayer docs<ExternalLink size={12} className="side-ext"/></a><a href="https://github.com/genlayerlabs" target="_blank" rel="noreferrer"><Github size={17}/>Developer portal<ExternalLink size={12} className="side-ext"/></a></nav>
       <div className="side-bottom"><div className="network-box"><div className="network-dot"/><div><b>Studio Dev</b><small>Chain 61997 · operational</small></div><ChevronDown size={14}/></div>
-        <div className="wallet-box">{isConnected ? <><div className="wallet-row"><div className="wallet-symbol"><Wallet size={15}/></div><span><b>Wallet connected</b><small>{short(walletAddress)} · {balance.toFixed(2)} GEN</small></span><span className="connected-dot"/></div></> : <button className="wallet-cta" onClick={connect} disabled={isConnecting}><Wallet size={15}/>{isConnecting ? "Connecting..." : "Connect wallet"}<ArrowRight size={14}/></button>}</div>
+        <div className="wallet-box">{isConnected ? <><div className="wallet-row"><div className="wallet-symbol"><Wallet size={15}/></div><span><b>Wallet connected</b><small>{short(walletAddress)} · {balance.toFixed(2)} GEN</small></span><span className="connected-dot"/></div></> : <button type="button" className="wallet-cta" onClick={connect}><Wallet size={15}/>Connect wallet<ArrowRight size={14}/></button>}</div>
         <Link className="side-settings" to="/settings"><span className="user-mini">{isConnected ? walletAddress.slice(2, 4).toUpperCase() : "CS"}</span><span><b>{isConnected ? short(walletAddress) : "CredScore user"}</b><small>{isConnected ? "Connected account" : "Explorer access"}</small></span><ChevronDown size={14}/></Link>
       </div>
     </aside>
     <main className="cs-main">
-      <header className="cs-topbar"><div className="breadcrumbs"><span>CredScore</span><span>/</span><b>{page === "agent" ? activeAgent.name : ({ dashboard: "Overview", agents: "Agent directory", ratings: "Ratings", disputes: "Dispute center", docs: "Documentation", settings: "Settings" } as any)[page]}</b></div>
+      <header className="cs-topbar"><div className="topbar-left"><button type="button" className="menu-toggle" aria-label="Open navigation" onClick={() => setSidebarOpen(true)}><Menu size={19}/></button><div className="breadcrumbs"><span>CredScore</span><span>/</span><b>{page === "agent" ? activeAgent.name : ({ dashboard: "Overview", agents: "Agent directory", ratings: "Ratings", disputes: "Dispute center", docs: "Documentation", settings: "Settings" } as any)[page]}</b></div></div>
         <div className="top-actions"><button className="icon-btn search-button" onClick={() => setSearchOpen(v => !v)}><Search size={17}/><span>Search</span><kbd>⌘ K</kbd></button><button className="icon-btn" title="Activity"><Activity size={17}/></button><button className="connect-top" onClick={connect} disabled={isConnecting}>{isConnected ? <><i className="connected-dot"/>{short(walletAddress)}</> : <><Wallet size={15}/>{isConnecting ? "Connecting" : "Connect wallet"}</>}</button></div>
       </header>
       <div className="cs-content">
@@ -140,7 +141,7 @@ export default function CredScoreApp({ page }: { page: Page }) {
       <footer className="cs-footer"><span>CredScore Protocol <b>·</b> Powered by <a href="https://genlayer.com" target="_blank" rel="noreferrer">GenLayer</a></span><span><i className="connected-dot"/> All systems operational <span className="footer-sep">·</span> v0.1.0</span></footer>
     </main>
     {searchOpen && <div className="search-overlay" onClick={() => setSearchOpen(false)}><div className="search-modal" onClick={e => e.stopPropagation()}><div className="search-input-wrap"><Search size={19}/><input autoFocus placeholder="Search agents, ratings, or pages..." value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => e.key === "Escape" && setSearchOpen(false)}/><kbd>ESC</kbd></div><div className="search-results"><small>QUICK NAVIGATION</small>{nav.map(n => <Link key={n.to} to={n.to} onClick={() => setSearchOpen(false)}><n.icon size={16}/>{n.label}<ArrowRight size={14}/></Link>)}<small>TOP AGENTS</small>{agents.slice(0, 3).map(a => <Link key={a.address} to={`/agents/${a.address}`} onClick={() => setSearchOpen(false)}><Avatar agent={a}/>{a.name}<span>{a.score} score</span></Link>)}</div></div></div>}
-    {modal && <Modal type={modal} form={form} setForm={setForm} onClose={() => setModal(null)} onSubmit={submitModal} busy={busy} agents={agents} ratings={ratings} isConnected={isConnected}/>}
+    {modal && <Modal type={modal} form={form} setForm={setForm} onClose={() => setModal(null)} onSubmit={submitModal} busy={busy} agents={agents} ratings={ratings} isConnected={isConnected}/>}<WalletModal open={walletModalOpen} onOpenChange={setWalletModalOpen}/>
     {notice && <div className="cs-toast"><Sparkles size={16}/>{notice}<button onClick={() => setNotice("")}><X size={15}/></button></div>}
   </div>;
 }
