@@ -31,7 +31,7 @@ const SidebarFaucetButton = ({ address }: { address: string }) => {
       const res = await fetch("https://genlayer-faucet.vercel.app/api/faucet", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ address, network: "Genlayer Testnet", token: "GEN", turnstileToken: "" }),
+        body: JSON.stringify({ address, network: "Studio Dev", token: "GEN", turnstileToken: "" }),
       });
       if (!res.ok) throw new Error(await res.text() || "Faucet request failed");
       toast({ title: "Tokens requested!", description: "GEN tokens should arrive shortly." });

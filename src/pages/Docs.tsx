@@ -8,9 +8,9 @@ const sections = [
     icon: Zap,
     title: "Getting Started",
     content: [
-      "**GenForge** is a suite of decentralized applications built on the GenLayer Asimov Testnet — an AI-powered Layer 1 blockchain that uses Python-based Intelligent Contracts.",
+      "**GenForge** is a suite of decentralized applications built on the GenLayer Studio Dev — an AI-powered Layer 1 blockchain that uses Python-based Intelligent Contracts.",
       "To begin, connect your wallet using the sidebar or homepage. You can either generate a new testnet wallet instantly or connect an existing EVM-compatible browser wallet (MetaMask, Rabby, Coinbase Wallet, etc.).",
-      "Generated wallets provide a private key you can export from the **Settings** page. All operations use GEN tokens on the Asimov Testnet.",
+      "Generated wallets provide a private key you can export from the **Settings** page. All operations use GEN tokens on the Studio Dev.",
     ],
   },
   {
@@ -20,7 +20,7 @@ const sections = [
       "GenForge supports two connection modes:",
       "• **Generated Wallet** — A testnet wallet created instantly in your browser. Your private key is stored locally and visible in Settings. Use this for quick testing.",
       "• **Browser Wallet** — Connect MetaMask, Rabby, Coinbase Wallet, Brave Wallet, or any injected EVM provider. The app detects all installed wallets automatically.",
-      "Your GEN balance is fetched directly from the GenLayer Asimov Testnet RPC and refreshes every 30 seconds. Creating bounties and bets requires allocating GEN tokens to an escrow pool.",
+      "Your GEN balance is fetched directly from the GenLayer Studio Dev RPC and refreshes every 30 seconds. Creating bounties and bets requires allocating GEN tokens to an escrow pool.",
     ],
   },
   {
@@ -63,7 +63,7 @@ const sections = [
     icon: Code2,
     title: "Deploy Contracts",
     content: [
-      "Write Python Intelligent Contracts directly in the browser and deploy them to the GenLayer Asimov Testnet.",
+      "Write Python Intelligent Contracts directly in the browser and deploy them to the GenLayer Studio Dev.",
       "Intelligent Contracts are Python classes that inherit from `Contract`. They support `@callable` methods, can browse the web, and use LLM consensus for validation.",
       "Deployed contracts are recorded with their address, transaction hash, and deployment status. The contract list persists across sessions.",
     ],

@@ -43,7 +43,7 @@ const products = [
   {
     icon: Code2,
     title: "Deploy Contracts",
-    description: "Write Python Intelligent Contracts and deploy them directly to GenLayer Asimov Testnet.",
+    description: "Write Python Intelligent Contracts and deploy them directly to GenLayer Studio Dev.",
     tags: ["Deploy", "Python"],
     path: "/deploy",
   },
@@ -107,7 +107,7 @@ const Index = () => {
           >
             <div className="flex items-center gap-2 mb-4">
               <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              <span className="text-sm font-mono text-primary">Live on Asimov Testnet</span>
+              <span className="text-sm font-mono text-primary">Live on Studio Dev</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground leading-tight">
               Build & Play on the

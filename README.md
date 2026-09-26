@@ -10,15 +10,15 @@ cp .env.example .env.local
 npm run dev
 ```
 
-The dashboard starts in clearly marked preview mode. Set `VITE_CREDSCORE_ADDRESS` after deploying the contract to load agent and rating records from Asimov Testnet. The illustrative network totals and trend charts stay labeled as sample metrics until an indexer is configured.
+The dashboard connects to the deployed CredScore contract on Studio Dev. The illustrative network totals and trend charts stay labeled as sample metrics until an indexer is configured.
 
-Connect an EIP-1193 wallet on Asimov Testnet. GenLayerJS submits contract writes; this frontend uses the stable SDK interface available for Asimov. Fee policy and transaction-kit integrations should be upgraded together with the network and SDK when targeting the Consensus v0.6 preview.
+Connect an EIP-1193 wallet on Studio Dev. GenLayerJS submits contract writes through chain ID 61997.
 
 ## Contract
 
 `contracts/credscore.py` is a Python Intelligent Contract, not an ERC-721 Solidity contract. GenLayer Intelligent Contracts do not inherit Solidity token standards. Here each registered wallet is the portable profile identity; the current score, stake, task ratings, dispute state, and audit snapshot URI are readable through contract views. An EVM-layer NFT wrapper can be added later if interoperable NFT ownership is a hard product requirement.
 
-Deploy the zero-argument contract with the GenLayer CLI (`genlayer network set testnet-asimov`, then `genlayer deploy --contract contracts/credscore.py`) or load the file into [GenLayer Studio](https://studio.genlayer.com/) and deploy it on Asimov. Verify the deployment transaction before putting its address in the frontend environment. The deployer is the initial snapshot aggregator. Use `set_aggregator(new_aggregator)` from the deployer wallet before running the worker under a separate key.
+The contract is deployed on Studio Dev at `0xFD073b95B530265d6E570Dc25a16e6165a0e5836`. To redeploy, use the GenLayer CLI (`genlayer network set studio-dev`, then `genlayer deploy --contract contracts/credscore.py`) or load the file into [GenLayer Studio Next](https://studio-next.genlayer.com/). Verify the deployment transaction before changing the frontend environment. The deployer is the initial snapshot aggregator. Use `set_aggregator(new_aggregator)` from the deployer wallet before running the worker under a separate key.
 
 The contract stores ratings and computes score synchronously. Rater stake at submission sets the rating weight, with an unbonded reviewer assigned a weight of one. Disputes preserve both the original rating evidence and the challenge URI; `adjudicate_dispute` asks GenLayer validators to independently compare verdicts against those sources under the comparative Equivalence Principle. The contract does not slash funds: no evidence-based bond ownership or safe withdrawal policy is specified in this MVP.
 

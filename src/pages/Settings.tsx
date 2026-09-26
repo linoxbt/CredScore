@@ -23,7 +23,7 @@ const FaucetButton = ({ address }: { address: string }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           address,
-          network: "Genlayer Testnet",
+          network: "Studio Dev",
           token: "GEN",
           turnstileToken: "",
         }),
@@ -90,7 +90,7 @@ const Settings = () => {
               Wallet
             </CardTitle>
             <CardDescription>
-              {isConnected ? "Connected to GenLayer Asimov Testnet" : "No wallet connected"}
+              {isConnected ? "Connected to GenLayer Studio Dev" : "No wallet connected"}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -195,11 +195,11 @@ const Settings = () => {
           <CardContent className="space-y-2">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Chain</span>
-              <span className="text-foreground font-mono">GenLayer Asimov Testnet</span>
+              <span className="text-foreground font-mono">GenLayer Studio Dev</span>
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">RPC</span>
-              <span className="text-foreground font-mono text-xs">https://asimov.genlayer.com</span>
+              <span className="text-foreground font-mono text-xs">https://studio-next.genlayer.com</span>
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Token</span>

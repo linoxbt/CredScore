@@ -1,9 +1,11 @@
-# { "Depends": "py-genlayer:test" }
-from genlayer import gl
-from genlayer import *
+# v0.3.0
+# { "Depends": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng" }
+import genlayer as gl
+from genlayer.types import *
+from genlayer.storage import DynArray, TreeMap
 
 
-class CredScore(gl.Contract):
+class CredScore(gl.contract.Contract):
     """Agent reputation registry. Ratings are signed by their sender address."""
     owner: Address
     next_rating_id: u256
