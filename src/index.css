@@ -50,6 +50,14 @@
   }
 }
 
+/* Motion layer for the violet protocol landing page */
+.landing-grid{position:absolute;inset:0;z-index:-1;opacity:.35;background-image:linear-gradient(#c39bff0b 1px,transparent 1px),linear-gradient(90deg,#c39bff0b 1px,transparent 1px);background-size:72px 72px;mask-image:linear-gradient(to bottom,#000,transparent 78%);pointer-events:none}
+.landing-particles{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none}.landing-particles i{position:absolute;width:5px;height:5px;border-radius:50%;background:#c8a2ff;box-shadow:0 0 18px #b66fff;opacity:.7;animation:landingDrift 9s ease-in-out infinite}.landing-particles i:nth-child(1){left:12%;top:22%;animation-delay:-2s}.landing-particles i:nth-child(2){left:82%;top:28%;animation-delay:-6s}.landing-particles i:nth-child(3){left:67%;top:68%;animation-delay:-4s}.landing-particles i:nth-child(4){left:28%;top:75%;animation-delay:-7s}.landing-particles i:nth-child(5){left:49%;top:13%;animation-delay:-1s}
+.landing-visual-orbit{position:absolute;width:390px;height:390px;border:1px solid #b988ff22;border-radius:50%;animation:landingSpin 24s linear infinite}.landing-visual-orbit:before,.landing-visual-orbit:after{content:'';position:absolute;width:9px;height:9px;border-radius:50%;background:#d6b5ff;box-shadow:0 0 22px #bd85ff;top:14%;left:12%}.landing-visual-orbit:after{top:auto;left:auto;right:10%;bottom:20%;background:#8ee4ff;box-shadow:0 0 22px #70c6ff}
+.landing-score-card{animation:landingFloat 7s ease-in-out infinite}.landing-event-card{animation:landingFloat 7s ease-in-out -2.5s infinite}.landing-signal-card{position:absolute;left:2%;top:14%;display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid #c7a2ff30;border-radius:10px;background:#1b102be8;color:#cdb2ed;font:9px 'JetBrains Mono',monospace;box-shadow:0 12px 40px #0005;animation:landingFloat 6s ease-in-out -1s infinite}.landing-signal-card b{color:#e9d9ff;margin-left:6px}.landing-signal-dot{width:6px;height:6px;border-radius:50%;background:#aef2ce;box-shadow:0 0 12px #91ebbe;animation:landingPulse 1.8s ease-in-out infinite}
+@keyframes landingFloat{0%,100%{translate:0 0}50%{translate:0 -10px}}@keyframes landingSpin{to{transform:rotate(360deg)}}@keyframes landingDrift{0%,100%{translate:0 0;opacity:.35}50%{translate:0 -24px;opacity:.9}}@keyframes landingPulse{50%{transform:scale(1.5);opacity:.6}}
+@media(max-width:760px){.landing-visual-orbit{width:290px;height:290px}.landing-signal-card{left:0;top:5%;font-size:8px}}
+
 @layer base {
   * {
     @apply border-border;
