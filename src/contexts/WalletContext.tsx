@@ -10,6 +10,7 @@ interface WalletContextType {
   balance: number;
   isConnecting: boolean;
   isConnected: boolean;
+  canSign: boolean;
   client: ReturnType<typeof createClient>;
   walletError: string;
   openWallet: () => Promise<void>;
@@ -33,6 +34,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
   const { address: connectedAddress, isConnected, status } = useAppKitAccount({ namespace: "eip155" });
   const { walletProvider } = useAppKitProvider<Eip1193Provider>("eip155");
   const [client, setClient] = useState(readClient);
+  const [canSign, setCanSign] = useState(false);
   const [balance, setBalance] = useState(0);
   const [walletError, setWalletError] = useState("");
 
@@ -41,6 +43,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!address || !walletProvider) {
+      setCanSign(false);
       setClient(readClient());
       setBalance(0);
       if (!address) setWalletError("");
@@ -52,20 +55,17 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
         await ensureStudioDev(walletProvider);
         if (!alive) return;
         setWalletError("");
-        setClient(createClient({
-          chain: studioDevnet,
-          account: address as Address,
-          provider: walletProvider,
-        }));
       } catch (error) {
         if (!alive) return;
         setWalletError(error instanceof Error ? error.message : "Switch the wallet to GenLayer Studio Dev (chain 61997).");
-        setClient(createClient({
-          chain: studioDevnet,
-          account: address as Address,
-          provider: walletProvider,
-        }));
       }
+      if (!alive) return;
+      setClient(createClient({
+        chain: studioDevnet,
+        account: address as Address,
+        provider: walletProvider,
+      }));
+      setCanSign(true);
     })();
     return () => { alive = false; };
   }, [address, walletProvider]);
@@ -93,13 +93,14 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
 
   const disconnect = useCallback(async () => {
     await reownDisconnect({ namespace: "eip155" });
+    setCanSign(false);
     setClient(readClient());
     setBalance(0);
     setWalletError("");
   }, [reownDisconnect]);
 
   return (
-    <WalletContext.Provider value={{ address, balance, isConnecting, isConnected, client, walletError, openWallet, disconnect, refreshBalance }}>
+    <WalletContext.Provider value={{ address, balance, isConnecting, isConnected, canSign, client, walletError, openWallet, disconnect, refreshBalance }}>
       {children}
     </WalletContext.Provider>
   );
