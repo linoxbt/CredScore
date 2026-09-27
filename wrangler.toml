@@ -10,5 +10,4 @@ not_found_handling = "single-page-application"
 # values for a repeatable Studio Dev deployment from Wrangler.
 [vars]
 VITE_CREDSCORE_NETWORK = "studio-dev"
-# Set VITE_CREDSCORE_ADDRESS in the Cloudflare project after deploying contracts/credscore.py.
-# An older CredScore address does not expose open_task or the dispute bond.
+VITE_CREDSCORE_ADDRESS = "0xd5c4D1D3D228001f97273ED2855277cC49eC9940"

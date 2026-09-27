@@ -18,7 +18,7 @@ Connect a wallet through Reown on Studio Dev. GenLayerJS submits contract writes
 
 `contracts/credscore.py` is a Python Intelligent Contract, not an ERC-721 Solidity contract. GenLayer Intelligent Contracts do not inherit Solidity token standards. Here each registered wallet is the portable profile identity; the current score, stake, task ratings, dispute state, and audit snapshot URI are readable through contract views. An EVM-layer NFT wrapper can be added later if interoperable NFT ownership is a hard product requirement.
 
-Deploy `contracts/credscore.py` to Studio Dev, then set `VITE_CREDSCORE_ADDRESS` to that deployment. The previous address `0xFD073b95B530265d6E570Dc25a16e6165a0e5836` does not include task acceptance, the rating-weight budget, or the dispute bond. The installed GenLayer CLI on this machine does not list the `studio-dev` network (chain 61997); deploy from GenLayer Studio Next or a client pointed at `https://studio-dev.genlayer.com/api`. The deployer is the initial snapshot aggregator. Use `set_aggregator(new_aggregator)` before running the worker under a separate key.
+The Studio Dev deployment is `0xd5c4D1D3D228001f97273ED2855277cC49eC9940` (chain 61997). It includes task acceptance, the rating-weight budget, and the dispute bond. Do not point the app at `0xFD073b95B530265d6E570Dc25a16e6165a0e5836`. The installed GenLayer CLI on this machine does not list the `studio-dev` network; deploy from a client pointed at `https://studio-dev.genlayer.com/api`. The contract's Depends line must be the only leading `#` line, because Studio reads every leading comment as the runner header. The deployer `0x9e87Cadef97d0BF53BD72f55242a37c21318a230` is the owner and the initial snapshot aggregator. Use `set_aggregator(new_aggregator)` before running the worker under a separate key.
 
 ## Cloudflare Pages
 
@@ -30,7 +30,7 @@ This repository includes `wrangler.toml`, SPA redirects, security headers, and a
 
 The connected Cloudflare application is currently a Worker, so its **Deploy command** can remain `npx wrangler deploy`. `wrangler.toml` declares `dist` under `[assets]` for that deployment. If you recreate it as a Pages project, leave the Pages deploy command empty or use `npm run deploy:pages` instead.
 
-For GitHub Actions, add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` as repository secrets. The workflow sets the public `VITE_REOWN_PROJECT_ID`. Set `VITE_CREDSCORE_ADDRESS` as a repository variable after a new contract deployment. The workflow deploys the `main` branch to the Cloudflare Pages project named `credscore`.
+For GitHub Actions, add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` as repository secrets. The workflow sets the public `VITE_REOWN_PROJECT_ID` and bakes `VITE_CREDSCORE_ADDRESS` into the Vite build. The workflow deploys the `main` branch to the Cloudflare Pages project named `credscore`.
 
 The contract stores ratings and computes score synchronously. Rater stake at submission sets the rating weight, with an unbonded reviewer assigned a weight of one. Disputes preserve both the original rating evidence and the challenge URI; `adjudicate_dispute` asks GenLayer validators to independently compare verdicts against those sources under the comparative Equivalence Principle. The contract does not slash funds: no evidence-based bond ownership or safe withdrawal policy is specified in this MVP.
 
