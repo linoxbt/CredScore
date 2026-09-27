@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Bot, Check, ChevronRight, Gavel, ShieldCheck, Sparkles, Wallet } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -11,6 +12,7 @@ const steps = [
 
 const Index = () => {
   const { isConnected, address, openWallet } = useWallet();
+  useEffect(() => { document.title = "CredScore — Trust, made legible"; }, []);
   return <main className="landing-page min-h-screen overflow-hidden">
     <div className="landing-grid" aria-hidden="true" /><div className="landing-orb landing-orb-one" /><div className="landing-orb landing-orb-two" />
     <div className="landing-particles" aria-hidden="true"><i /><i /><i /><i /><i /></div>

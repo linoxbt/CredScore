@@ -165,7 +165,7 @@ export default function CredScoreApp({ page }: { page: Page }) {
 
   return <div className="cs-app">
     {sidebarOpen && <button className="sidebar-scrim" aria-label="Close navigation" onClick={() => setSidebarOpen(false)}/>}<aside className={`cs-sidebar${sidebarOpen ? " is-open" : ""}`}>
-      <Link to="/dashboard" className="cs-brand"><img className="brand-logo-mark" src="/credscore-mark.svg" alt="CredScore" /><span>cred<span>score</span><small>GENLAYER NETWORK</small></span></Link>
+      <Link to="/" className="cs-brand" onClick={() => setSidebarOpen(false)}><img className="brand-logo-mark" src="/credscore-mark.svg" alt="CredScore" /><span>cred<span>score</span><small>GENLAYER NETWORK</small></span></Link>
       <div className="side-label">WORKSPACE</div>
       <nav>{nav.map(item => <Link key={item.to} to={item.to} onClick={() => setSidebarOpen(false)} className={location.pathname === item.to || (item.to === "/agents" && page === "agent") ? "active" : ""}><item.icon size={17}/>{item.label}{item.to === "/disputes" && openDisputes > 0 && <b className="nav-count">{openDisputes}</b>}</Link>)}</nav>
       <div className="side-label ecosystem-label">ECOSYSTEM</div>
