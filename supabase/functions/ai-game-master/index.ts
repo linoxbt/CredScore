@@ -7,6 +7,7 @@ const corsHeaders = {
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  return new Response(JSON.stringify({ error: "This GenForge function is retired and does not call the model." }), { status: 410, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
   try {
     const { messages, playerStats, scenario } = await req.json();

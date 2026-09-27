@@ -59,7 +59,7 @@ const WalletModal = ({ open, onOpenChange }: WalletModalProps) => {
             </div>
             <div className="flex-1">
               <p className="text-sm font-semibold text-foreground">Generate Wallet</p>
-              <p className="text-xs text-muted-foreground">Create a new testnet wallet instantly</p>
+              <p className="text-xs text-muted-foreground">Session-only key. It is not saved, and disconnect or refresh drops it.</p>
             </div>
             <ChevronRight className="w-4 h-4 text-muted-foreground" />
           </button>

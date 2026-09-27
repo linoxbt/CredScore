@@ -18,7 +18,7 @@ Connect an EIP-1193 wallet on Studio Dev. GenLayerJS submits contract writes thr
 
 `contracts/credscore.py` is a Python Intelligent Contract, not an ERC-721 Solidity contract. GenLayer Intelligent Contracts do not inherit Solidity token standards. Here each registered wallet is the portable profile identity; the current score, stake, task ratings, dispute state, and audit snapshot URI are readable through contract views. An EVM-layer NFT wrapper can be added later if interoperable NFT ownership is a hard product requirement.
 
-The contract is deployed on Studio Dev at `0xFD073b95B530265d6E570Dc25a16e6165a0e5836`. To redeploy, use the GenLayer CLI (`genlayer network set studio-dev`, then `genlayer deploy --contract contracts/credscore.py`) or load the file into [GenLayer Studio Next](https://studio-next.genlayer.com/). Verify the deployment transaction before changing the frontend environment. The deployer is the initial snapshot aggregator. Use `set_aggregator(new_aggregator)` from the deployer wallet before running the worker under a separate key.
+Deploy `contracts/credscore.py` to Studio Dev, then set `VITE_CREDSCORE_ADDRESS` to that deployment. The previous address `0xFD073b95B530265d6E570Dc25a16e6165a0e5836` does not include task acceptance, the rating-weight budget, or the dispute bond. The installed GenLayer CLI on this machine does not list the `studio-dev` network (chain 61997); deploy from GenLayer Studio Next or a client pointed at `https://studio-dev.genlayer.com/api`. The deployer is the initial snapshot aggregator. Use `set_aggregator(new_aggregator)` before running the worker under a separate key.
 
 ## Cloudflare Pages
 
@@ -49,11 +49,17 @@ The worker account must be set as aggregator by the contract owner. Snapshots mi
 | Method | Type | Purpose |
 |---|---|---|
 | `register_agent(name, profile_uri)` | write | Register caller wallet as an agent |
-| `stake()` | payable write | Add attached GEN to caller’s bond |
-| `submit_rating(target, rating, evidence_uri)` | write | Sign a 1–5 task rating as the caller |
-| `file_dispute(rating_id, evidence_uri)` | write | Attach a public challenge evidence URI |
-| `adjudicate_dispute(rating_id)` | GenLayer write | Review evidence and apply a verdict |
+| `open_task(task_id, counterparty, description)` | write | Agent records one task for one counterparty |
+| `accept_task(task_id)` | write | Counterparty accepts that task |
+| `cancel_task(task_id)` | write | Agent cancels a task that has no rating |
+| `stake()` | payable write | Add GEN. The balance can fund rating weight once |
+| `submit_rating(task_id, rating, evidence_uri)` | write | Accepted counterparty submits the only 1–5 rating |
+| `file_dispute(rating_id, evidence_uri)` | payable write | Participant posts the bond and challenge evidence |
+| `adjudicate_dispute(rating_id)` | GenLayer write | Exact APPROVE or REJECT; the first one is final |
+| `transfer_ownership(address)` | owner write | Move the owner key |
+| `add_evidence_host(host)` / `remove_evidence_host(host)` | owner writes | Maintain the evidence host allowlist |
 | `get_agent(agent)` / `get_agents()` | view | Read a profile and the agent directory |
+| `get_task(task_id)` | view | Read the authenticated task and its rating id |
 | `get_rating(rating_id)` / `get_rating_count()` | view | Read rating and dispute records |
 | `set_aggregator(address)` / `publish_snapshot(agent, uri)` | owner / aggregator writes | Authorize and publish IPFS audit snapshots |
 

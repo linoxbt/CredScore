@@ -6,3 +6,5 @@ dist/
 *.tsbuildinfo
 __pycache__/
 *.pyc
+
+agents/aggregator-state.json

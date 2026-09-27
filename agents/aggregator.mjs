@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
 dotenv.config();
+import { readFileSync, writeFileSync } from "node:fs";
 import { createAccount, createClient } from "genlayer-js";
 import { studioDevnet } from "genlayer-js/chains";
 
@@ -12,7 +13,15 @@ if (!AGGREGATOR_PRIVATE_KEY || !VITE_CREDSCORE_ADDRESS || !PINATA_JWT) {
 const contract = VITE_CREDSCORE_ADDRESS;
 const client = createClient({ chain: studioDevnet, account: createAccount(AGGREGATOR_PRIVATE_KEY) });
 const cache = new Map();
+const statePath = new URL("./aggregator-state.json", import.meta.url);
 const lastSnapshot = new Map();
+try {
+  const saved = JSON.parse(readFileSync(statePath, "utf8"));
+  for (const [agent, fingerprint] of Object.entries(saved)) lastSnapshot.set(agent, fingerprint);
+} catch {
+  // The first run has no saved fingerprints.
+}
+const persistFingerprints = () => writeFileSync(statePath, JSON.stringify(Object.fromEntries(lastSnapshot)));
 const zero = "0x0000000000000000000000000000000000000000";
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -36,7 +45,7 @@ async function sync() {
   const count = Number(await read("get_rating_count"));
   for (let id = 1; id <= count; id++) {
     const r = await read("get_rating", [BigInt(id)]);
-    cache.set(id, { id, target: String(r.target ?? zero), author: String(r.author ?? zero), rating: Number(r.rating ?? 0), weight: BigInt(String(r.weight ?? "1")), evidenceUri: String(r.evidence ?? ""), task: String(r.task ?? ""), disputed: Boolean(r.disputed), resolved: Boolean(r.resolved), approved: Boolean(r.approved) });
+    cache.set(id, { id, target: String(r.target ?? zero), author: String(r.author ?? zero), rating: Number(r.rating ?? 0), original: Number(r.original ?? r.rating ?? 0), weight: BigInt(String(r.weight ?? "1")), evidenceUri: String(r.evidence ?? ""), task: String(r.task ?? ""), taskId: String(r.task_id ?? ""), disputed: Boolean(r.disputed), resolved: Boolean(r.resolved), approved: Boolean(r.approved) });
   }
 
   for (const agentAddress of agents ?? []) {
@@ -55,7 +64,7 @@ async function sync() {
     const snapshotCore = {
       schema: "credscore.snapshot.v1", agent, score: Number(info.score ?? calculatedScore),
       calculatedScore, stakeWei: stake.toString(), ratingCount: rows.length,
-      ratings: rows.map(({ id, author, rating, weight, evidenceUri, task, disputed, resolved, approved }) => ({ id, author, rating, weight: weight.toString(), evidenceUri, task, disputed, resolved, approved })),
+      ratings: rows.map(({ id, author, rating, original, weight, evidenceUri, task, taskId, disputed, resolved, approved }) => ({ id, author, rating, original, weight: weight.toString(), evidenceUri, task, taskId, disputed, resolved, approved })),
       source: "credscore-aggregator",
     };
     const fingerprint = JSON.stringify(snapshotCore);
@@ -65,6 +74,7 @@ async function sync() {
     const hash = await client.writeContract({ address: contract, functionName: "publish_snapshot", args: [agent, snapshotUri], value: 0n });
     await client.waitForTransactionReceipt({ hash });
     lastSnapshot.set(agent, fingerprint);
+    persistFingerprints();
     console.log(`[CredScore] ${agent} · score ${snapshot.score} · ${rows.length} ratings · ${snapshotUri} · ${hash}`);
   }
 }

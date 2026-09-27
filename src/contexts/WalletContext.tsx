@@ -42,8 +42,6 @@ export const useWallet = () => {
   return ctx;
 };
 
-const PRIVATE_KEY_STORAGE = "genlayer_pk";
-
 export function getAvailableWallets(): { name: string; icon: string; provider: any }[] {
   if (typeof window === "undefined") return [];
   const wallets: { name: string; icon: string; provider: any }[] = [];
@@ -103,19 +101,14 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
   const connectGenerated = useCallback(async () => {
     setIsConnecting(true);
     try {
-      let pk = localStorage.getItem(PRIVATE_KEY_STORAGE) as `0x${string}` | null;
-      if (!pk) {
-        pk = generatePrivateKey();
-        localStorage.setItem(PRIVATE_KEY_STORAGE, pk);
-      }
-
+      const pk = generatePrivateKey();
       const acc = createAccount(pk);
       const cl = createClient({ chain: studioDevnet, account: acc });
 
       setAccount(acc);
       setClient(cl);
       setAddress(acc.address);
-      setPrivateKey(pk);
+      setPrivateKey(null);
       setConnectionMode("generated");
       addTx({ type: "deposit", amount: 0, description: "Connected via Generated Wallet (Studio Dev)" });
     } catch (e) {
