@@ -31,7 +31,8 @@
     "typescript": "^5.8.3",
     "viem": "^2.31.7",
     "vite": "^6.3.5",
-    "wagmi": "2.19.5"
+    "wagmi": "2.19.5",
+    "@wagmi/connectors": "6.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.23",

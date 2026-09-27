@@ -29,6 +29,7 @@ jobs:
         env:
           VITE_CREDSCORE_NETWORK: studio-dev
           VITE_CREDSCORE_ADDRESS: ${{ vars.VITE_CREDSCORE_ADDRESS }}
+          VITE_REOWN_PROJECT_ID: f0d6f8162be1beccf221b4e2f8bd7026
 
       - name: Deploy Pages
         uses: cloudflare/wrangler-action@v3

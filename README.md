@@ -12,7 +12,7 @@ npm run dev
 
 The dashboard connects to the deployed CredScore contract on Studio Dev. The illustrative network totals and trend charts stay labeled as sample metrics until an indexer is configured.
 
-Connect an EIP-1193 wallet on Studio Dev. GenLayerJS submits contract writes through chain ID 61997.
+Connect a wallet through Reown on Studio Dev. GenLayerJS submits contract writes through chain ID 61997. The Reown project id is the public `VITE_REOWN_PROJECT_ID` value.
 
 ## Contract
 
@@ -30,7 +30,7 @@ This repository includes `wrangler.toml`, SPA redirects, security headers, and a
 
 The connected Cloudflare application is currently a Worker, so its **Deploy command** can remain `npx wrangler deploy`. `wrangler.toml` declares `dist` under `[assets]` for that deployment. If you recreate it as a Pages project, leave the Pages deploy command empty or use `npm run deploy:pages` instead.
 
-For GitHub Actions, add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` as repository secrets. Add `VITE_REOWN_PROJECT_ID` as an Actions secret and set `VITE_CREDSCORE_ADDRESS` as a repository variable if you deploy a replacement contract. The workflow deploys the `main` branch to the Cloudflare Pages project named `credscore`.
+For GitHub Actions, add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` as repository secrets. The workflow sets the public `VITE_REOWN_PROJECT_ID`. Set `VITE_CREDSCORE_ADDRESS` as a repository variable after a new contract deployment. The workflow deploys the `main` branch to the Cloudflare Pages project named `credscore`.
 
 The contract stores ratings and computes score synchronously. Rater stake at submission sets the rating weight, with an unbonded reviewer assigned a weight of one. Disputes preserve both the original rating evidence and the challenge URI; `adjudicate_dispute` asks GenLayer validators to independently compare verdicts against those sources under the comparative Equivalence Principle. The contract does not slash funds: no evidence-based bond ownership or safe withdrawal policy is specified in this MVP.
 

@@ -118,3 +118,5 @@
     pointer-events: none;
   }
 }
+
+button.landing-wallet-pill { cursor: pointer; background: transparent; }
